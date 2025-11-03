@@ -14,6 +14,7 @@ import androidx.credentials.exceptions.CreateCredentialException
 import androidx.credentials.exceptions.CreateCredentialInterruptedException
 import androidx.credentials.exceptions.CreateCredentialProviderConfigurationException
 import androidx.credentials.exceptions.CreateCredentialUnknownException
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.credentials.exceptions.publickeycredential.CreatePublicKeyCredentialDomException
 import kotlinx.coroutines.CoroutineScope
 import kotlin.coroutines.EmptyCoroutineContext
@@ -35,18 +36,28 @@ class CredentialManagerHandler {
             return this.credentialManager.createCredential(appActivity, createRequest) as CreatePublicKeyCredentialResponse
         } catch (e: CreateCredentialException) {
             // For error handling use guidance from https://developer.android.com/training/sign-in/passkeys
-            Log.i(TAG, "Error creating credential: ErrMessage: ${e.errorMessage}, ErrType: ${e.type}")
+            Log.e(TAG, "ErrMessage: ${e.errorMessage}")
+            Log.e(TAG, "ErrType: ${e.type}")
+            Log.e(TAG, e.toString())
             throw e
         }
     }
 
     suspend fun getPasskey(requestJson: String): GetCredentialResponse {
+//        val requestJsonObj = JSONObject(requestJson)
+//        requestJsonObj.getJSONArray("allowCredentials").getJSONObject(0).getJSONArray("transports").remove(0)
+//        val newRequestJson = requestJsonObj.toString()
+//
+//        val getRequest = GetCredentialRequest(listOf(GetPublicKeyCredentialOption(newRequestJson, null)))
+//        Log.i(TAG, newRequestJson)
+
         val getRequest = GetCredentialRequest(listOf(GetPublicKeyCredentialOption(requestJson, null)))
         Log.i(TAG, requestJson)
         try {
             return this.credentialManager.getCredential(appActivity, getRequest)
-        } catch (e: Exception) {
-            handleFailure(e)
+        } catch (e: GetCredentialException) {
+            Log.e(TAG, "ErrMessage: ${e.errorMessage}")
+            Log.e(TAG, "ErrType: ${e.type}")
             throw e
         }
     }

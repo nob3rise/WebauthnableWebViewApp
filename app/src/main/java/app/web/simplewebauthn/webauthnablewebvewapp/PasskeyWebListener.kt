@@ -217,7 +217,7 @@ class PasskeyWebListener(
     }
 
     private fun postErrorMessage(reply: ReplyChannel, errorMessage: String, type: String) {
-        Log.i(TAG, "Sending error message back to the page via replyChannel $errorMessage");
+//        Log.i(TAG, "Sending error message back to the page via replyChannel $errorMessage");
         val array: MutableList<Any?> = ArrayList()
         array.add("error")
         array.add(errorMessage)
